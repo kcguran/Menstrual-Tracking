@@ -13,5 +13,6 @@ data class CalendarState(
     val selectedDate: LocalDate = LocalDate.now(),
     val currentFertilityWindow: FertilityWindow? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val showDeleteConfirmDialog: Boolean = false
 )

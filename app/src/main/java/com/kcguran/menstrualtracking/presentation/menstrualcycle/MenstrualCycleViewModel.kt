@@ -9,6 +9,7 @@ import com.kcguran.menstrualtracking.domain.model.MenstrualCycle
 import com.kcguran.menstrualtracking.domain.usecase.menstrualcycle.AddMenstrualCycleUseCase
 import com.kcguran.menstrualtracking.domain.usecase.menstrualcycle.GetMenstrualCyclesUseCase
 import com.kcguran.menstrualtracking.domain.usecase.menstrualcycle.PredictNextCycleUseCase
+import com.kcguran.menstrualtracking.domain.usecase.userprofile.RecalculateCycleAveragesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,7 +21,8 @@ class MenstrualCycleViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getMenstrualCyclesUseCase: GetMenstrualCyclesUseCase,
     private val addMenstrualCycleUseCase: AddMenstrualCycleUseCase,
-    private val predictNextCycleUseCase: PredictNextCycleUseCase
+    private val predictNextCycleUseCase: PredictNextCycleUseCase,
+    private val recalculateCycleAveragesUseCase: RecalculateCycleAveragesUseCase,
 ) : ViewModel() {
 
     private val _stateFlow: MutableStateFlow<MenstrualCycleState> = MutableStateFlow(MenstrualCycleState())
@@ -94,8 +96,12 @@ class MenstrualCycleViewModel @Inject constructor(
                 )
 
                 addMenstrualCycleUseCase(newCycle)
+
+                // Regl eklendikten sonra otomatik olarak ortalamaları hesapla
+                recalculateCycleAveragesUseCase()
+
                 // Bildirimleri tekrar planla
-                // scheduleNotifications()
+                //scheduleNotifications()
             } catch (e: Exception) {
                 _stateFlow.update {
                     it.copy(error = "Regl dönemi eklenirken hata oluştu: ${e.localizedMessage}")

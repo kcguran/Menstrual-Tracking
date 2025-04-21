@@ -12,7 +12,7 @@ import com.kcguran.menstrualtracking.data.local.entity.UserProfileEntity
 
 @Database(
     entities = [MenstrualCycleEntity::class, UserProfileEntity::class],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class, StringListConverter::class)

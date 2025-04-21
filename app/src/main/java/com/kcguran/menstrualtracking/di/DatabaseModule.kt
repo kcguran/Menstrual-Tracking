@@ -24,7 +24,9 @@ object DatabaseModule {
             context,
             MenstrualDatabase::class.java,
             "menstrual_database"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

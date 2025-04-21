@@ -11,4 +11,5 @@ interface MenstrualCycleRepository {
     fun getAllMenstrualCycles(): Flow<List<MenstrualCycle>>
     fun getMenstrualCyclesByDateRange(startDate: LocalDate, endDate: LocalDate): Flow<List<MenstrualCycle>>
     suspend fun deleteMenstrualCycle(id: Long)
+    suspend fun deleteAllMenstrualCycles()
 }

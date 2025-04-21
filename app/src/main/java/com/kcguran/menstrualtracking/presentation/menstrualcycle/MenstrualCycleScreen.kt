@@ -148,7 +148,6 @@ fun MenstrualCycleScreen(
                 }
             }
 
-            // Hafta günleri
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,25 +163,20 @@ fun MenstrualCycleScreen(
                     )
                 }
             }
-            // presentation/menstrualcycle/MenstrualCycleScreen.kt (devamı)
-            // Takvim grid'i
             LazyVerticalGrid(
                 columns = GridCells.Fixed(7),
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                // Ay içindeki günlerin gösterimi
                 val firstDayOfMonth = currentMonth.atDay(1)
                 val lastDayOfMonth = currentMonth.atEndOfMonth()
 
-                // Ayın ilk gününden önceki boşluklar
                 val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value % 7
                 items(firstDayOfWeek) {
                     Box(modifier = Modifier.aspectRatio(1f))
                 }
 
-                // Ayın günleri
                 val days = (1..lastDayOfMonth.dayOfMonth).map { day ->
                     currentMonth.atDay(day)
                 }

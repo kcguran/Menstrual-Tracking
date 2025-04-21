@@ -41,4 +41,8 @@ class MenstrualCycleRepositoryImpl @Inject constructor(
         menstrualCycleDao.deleteMenstrualCycle(id)
     }
 
+    override suspend fun deleteAllMenstrualCycles() {
+        menstrualCycleDao.deleteAllMenstrualCycles()
+    }
+
 }

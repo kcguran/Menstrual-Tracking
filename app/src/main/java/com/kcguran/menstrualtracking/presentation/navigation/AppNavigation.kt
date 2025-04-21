@@ -15,13 +15,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kcguran.menstrualtracking.domain.enum.StartDestination
 import com.kcguran.menstrualtracking.presentation.calendar.CalendarRoute
 import com.kcguran.menstrualtracking.presentation.menstrualcycle.MenstrualCycleRoute
+import com.kcguran.menstrualtracking.presentation.onboarding.OnboardingRoute
 import com.kcguran.menstrualtracking.presentation.profile.ProfileRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    startDestination: StartDestination = StartDestination.ONBOARDING
+) {
     val navController = rememberNavController()
 
     val items = listOf(
@@ -30,48 +34,53 @@ fun AppNavigation() {
         Triple(Route.Profile, "Profil", Icons.Default.Person)
     )
 
+    val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route != Route.Onboarding.route
+
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
+            if (showBottomBar) {
+                NavigationBar {
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentDestination = navBackStackEntry?.destination
 
-                items.forEach { (route, title, icon) ->
-                    NavigationBarItem(
-                        icon = { Icon(icon, contentDescription = title) },
-                        label = { Text(title) },
-                        selected = currentDestination?.hierarchy?.any { it.route == route.route } == true,
-                        onClick = {
-                            navController.navigate(route.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+                    items.forEach { (route, title, icon) ->
+                        NavigationBarItem(
+                            icon = { Icon(icon, contentDescription = title) },
+                            label = { Text(title) },
+                            selected = currentDestination?.hierarchy?.any { it.route == route.route } == true,
+                            onClick = {
+                                navController.navigate(route.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Route.MenstrualCycle.route,
+            startDestination = if (startDestination == StartDestination.ONBOARDING)
+                Route.Onboarding.route else Route.MenstrualCycle.route,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(Route.Onboarding.route) {
+                OnboardingRoute(navController = navController)
+            }
             composable(Route.MenstrualCycle.route) {
                 MenstrualCycleRoute(navController = navController)
             }
-            /*
             composable(Route.Calendar.route) {
                 CalendarRoute(navController = navController)
             }
             composable(Route.Profile.route) {
                 ProfileRoute(navController = navController)
             }
-
-             */
         }
     }
 }

@@ -30,4 +30,6 @@ interface MenstrualCycleDao {
     @Query("DELETE FROM menstrual_cycles WHERE id = :id")
     suspend fun deleteMenstrualCycle(id: Long)
 
+    @Query("DELETE FROM menstrual_cycles")
+    suspend fun deleteAllMenstrualCycles()
 }
